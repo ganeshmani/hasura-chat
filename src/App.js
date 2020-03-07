@@ -1,25 +1,23 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import customTheme from "./theme";
+import { ThemeProvider } from "@chakra-ui/core";
+import { Provider } from "react-redux";
+import configureStore from "./configureStore";
+import Routes from "./routes";
+const initialState = {};
+const store = configureStore(initialState);
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={customTheme}>
+      <Provider store={store}>
+        <div className="App">
+          <Routes />
+        </div>
+      </Provider>
+    </ThemeProvider>
   );
 }
 
