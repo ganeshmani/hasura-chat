@@ -30,25 +30,18 @@ function* loginUserApiRequest(payload) {
 function* loginUser(action) {
   try {
     const loginUserResponse = yield call(loginUserApiRequest, action.payload);
-
-    if (loginUserResponse) {
+    console.log("loginUserResponse", loginUserResponse);
+    if (loginUserResponse.status === 200) {
       yield put({
         type: LOGIN_USER_SUCCESS,
         payload: {
           success: true,
-          data: loginUserResponse.data.insert_users.returning[0]
-        }
-      });
-    } else {
-      yield put({
-        type: LOGIN_USER_FAILURE,
-        payload: {
-          success: false,
-          data: null
+          data: loginUserResponse.data.data.insert_users.returning[0]
         }
       });
     }
   } catch (err) {
+    console.log("Err", err);
     yield put({
       type: LOGIN_USER_FAILURE,
       payload: {
