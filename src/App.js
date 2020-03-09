@@ -6,7 +6,11 @@ import { ThemeProvider } from "@chakra-ui/core";
 import { Provider } from "react-redux";
 import configureStore from "./configureStore";
 import Routes from "./routes";
-const initialState = {};
+
+const user = localStorage.getItem("user");
+const initialState = {
+  users: JSON.parse(user)
+};
 const store = configureStore(initialState);
 
 function App() {

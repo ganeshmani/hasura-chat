@@ -1,5 +1,5 @@
 import axios from "axios";
-import { post } from "../../helpers/requests";
+import { post, get } from "../../helpers/requests";
 import { all, call, fork, put, takeEvery } from "redux-saga/effects";
 
 import {
@@ -23,7 +23,7 @@ function* submitMessageApiRequest(payload) {
           returning{
             text
             created_user
-            user{
+            users{
                 name
                 id
               }
@@ -45,7 +45,7 @@ function* fetchMessagesApiRequest(payload) {
         messages{
           id
           text
-          user{
+          users{
             name
             id
           }
@@ -63,7 +63,6 @@ function* submitMessage(action) {
       submitMessageApiRequest,
       action.payload
     );
-    console.log("submitMessageResponse", submitMessageResponse);
     if (submitMessageResponse.statusText === "OK") {
       yield put({
         type: SUBMIT_MESSAGE_SUCCESS,
@@ -97,6 +96,8 @@ function* fetchMessages() {
     const fetchMessagesResponse = yield call(fetchMessagesApiRequest);
 
     if (fetchMessagesResponse.statusText === "OK") {
+      yield call(subscriptionMessagesRequest);
+
       yield put({
         type: FETCH_MESSAGES_SUCCESS,
         payload: {

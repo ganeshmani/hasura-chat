@@ -14,7 +14,7 @@ export default createReducers(initialState, {
   SUBMIT_MESSAGE_SUCCESS: (state, action) => {
     let id = action.payload.data.id;
     let text = action.payload.data.text;
-    let user = action.payload.data.user;
+    let users = action.payload.data.users;
     return {
       ...state,
       messages: [
@@ -22,7 +22,7 @@ export default createReducers(initialState, {
         {
           id,
           text,
-          user
+          users
         }
       ]
     };

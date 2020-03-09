@@ -9,7 +9,7 @@ const ChatItem = ({ item }) => {
       <Flex direction="row">
         <Avatar size="sm" />
         <Flex direction="column">
-          <Text>{item.user.name}</Text>
+          <Text>{item.users.name}</Text>
           <Text>{item.text}</Text>
         </Flex>
       </Flex>

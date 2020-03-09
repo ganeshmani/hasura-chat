@@ -3,3 +3,8 @@ export const post = (url, data) => ({
   url,
   data
 });
+
+export const get = url => ({
+  method: "GET",
+  url
+});

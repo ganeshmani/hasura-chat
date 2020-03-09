@@ -32,6 +32,10 @@ function* loginUser(action) {
     const loginUserResponse = yield call(loginUserApiRequest, action.payload);
     console.log("loginUserResponse", loginUserResponse);
     if (loginUserResponse.status === 200) {
+      localStorage.setItem(
+        "user",
+        JSON.stringify(loginUserResponse.data.data.insert_users.returning[0])
+      );
       yield put({
         type: LOGIN_USER_SUCCESS,
         payload: {
