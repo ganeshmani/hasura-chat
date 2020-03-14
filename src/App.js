@@ -3,25 +3,54 @@ import logo from "./logo.svg";
 import "./App.css";
 import customTheme from "./theme";
 import { ThemeProvider } from "@chakra-ui/core";
-import { Provider } from "react-redux";
-import configureStore from "./configureStore";
 import Routes from "./routes";
+import ApolloClient from "apollo-client";
+import { ApolloProvider } from "@apollo/react-hooks";
+import { WebSocketLink } from "apollo-link-ws";
+import { HttpLink } from "apollo-link-http";
+import { split } from "apollo-link";
+import { getMainDefinition } from "apollo-utilities";
+import { InMemoryCache } from "apollo-cache-inmemory";
 
-const user = localStorage.getItem("user");
-const initialState = {
-  users: JSON.parse(user)
-};
-const store = configureStore(initialState);
+const httpLink = new HttpLink({
+  uri: "https://hasura-infiite-loader.herokuapp.com/v1alpha1/graphql" // use https for secure endpoint
+});
+
+// Create a WebSocket link:
+const wsLink = new WebSocketLink({
+  uri: "ws://hasura-infiite-loader.herokuapp.com/v1alpha1/graphql", // use wss for a secure endpoint
+  options: {
+    reconnect: true
+  }
+});
+
+// using the ability to split links, you can send data to each link
+// depending on what kind of operation is being sent
+const link = split(
+  // split based on operation type
+  ({ query }) => {
+    const { kind, operation } = getMainDefinition(query);
+    return kind === "OperationDefinition" && operation === "subscription";
+  },
+  wsLink,
+  httpLink
+);
+
+// Instantiate client
+const client = new ApolloClient({
+  link,
+  cache: new InMemoryCache()
+});
 
 function App() {
   return (
-    <ThemeProvider theme={customTheme}>
-      <Provider store={store}>
+    <ApolloProvider client={client}>
+      <ThemeProvider theme={customTheme}>
         <div className="App">
           <Routes />
         </div>
-      </Provider>
-    </ThemeProvider>
+      </ThemeProvider>
+    </ApolloProvider>
   );
 }
 

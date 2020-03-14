@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import {
   FormErrorMessage,
@@ -9,16 +9,35 @@ import {
   Box
 } from "@chakra-ui/core";
 
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+import { useMutation } from "@apollo/react-hooks";
+import { gql } from "apollo-boost";
 
-import { loginUser } from "../../store/user/action";
+const LOGIN_USER = gql`
+  mutation InsertUsers($name: String!, $password: String!) {
+    insert_users(objects: { name: $name, password: $password }) {
+      returning {
+        id
+        name
+      }
+    }
+  }
+`;
 
-const Login = ({ loginUser, history }) => {
+const Login = ({ history }) => {
   const [state, setState] = useState({
     name: "",
     password: ""
   });
+
+  const [insert_users, { data }] = useMutation(LOGIN_USER);
+
+  useEffect(() => {
+    const user = data && data.insert_users.returning[0];
+    if (user) {
+      localStorage.setItem("user", JSON.stringify(user));
+      history.push("/chat");
+    }
+  }, [data]);
   const { handleSubmit, errors, register, formState } = useForm();
 
   function validateName(value) {
@@ -43,14 +62,9 @@ const Login = ({ loginUser, history }) => {
   };
 
   const onSubmit = () => {
-    loginUser({
-      username: state.name,
-      password: state.password
-    });
+    insert_users({ variables: { name: state.name, password: state.password } });
 
     setState({ name: "", password: "" });
-
-    history.push("/chat");
   };
 
   return (
@@ -95,10 +109,4 @@ const Login = ({ loginUser, history }) => {
   );
 };
 
-const mapStateToProps = state => ({});
-
-const dispatchActionToProps = dispatch => ({
-  loginUser: bindActionCreators(loginUser, dispatch)
-});
-
-export default connect(mapStateToProps, dispatchActionToProps)(Login);
+export default Login;

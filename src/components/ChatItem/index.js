@@ -3,14 +3,15 @@ import React from "react";
 import { Box, Flex, Avatar, Heading, Text } from "@chakra-ui/core";
 
 const ChatItem = ({ item }) => {
-  console.log("item", item);
   return (
-    <Box h="50px">
-      <Flex direction="row">
-        <Avatar size="sm" />
-        <Flex direction="column">
-          <Text>{item.users.name}</Text>
-          <Text>{item.text}</Text>
+    <Box h="60px">
+      <Flex direction="row" alignItems="center" height="100%">
+        <Avatar size="sm" padding="4px" marginLeft="10px" />
+        <Flex direction="column" margin="5px">
+          <Text fontSize="xl" margin="0">
+            {item.users.name}
+          </Text>
+          <Text margin="0">{item.text}</Text>
         </Flex>
       </Flex>
     </Box>
