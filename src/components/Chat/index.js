@@ -5,7 +5,7 @@ import { Box, Flex, Input } from "@chakra-ui/core";
 import ChatItem from "../ChatItem";
 
 import { useMutation, useSubscription } from "@apollo/react-hooks";
-import { gql } from "apollo-boost";
+import gql from "graphql-tag";
 
 const MESSAGES_SUBSCRIPTION = gql`
   subscription {

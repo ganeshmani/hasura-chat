@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/core";
 
 import { useMutation } from "@apollo/react-hooks";
-import { gql } from "apollo-boost";
+import gql from "graphql-tag";
 
 const LOGIN_USER = gql`
   mutation InsertUsers($name: String!, $password: String!) {
